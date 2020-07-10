@@ -24,6 +24,7 @@
     },
     "dependencies": {
         "admin-lte": "^3.0.5",
-        "icheck-bootstrap": "^3.0.1"
+        "icheck-bootstrap": "^3.0.1",
+        "toastr": "^2.1.4"
     }
 }

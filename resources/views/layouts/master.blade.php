@@ -69,7 +69,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="{{ url('/articles') }}" class="nav-link @if(Request::segment(1) == 'articles' || Request::segment(1) == 'article') active @endif">
                                 <i class="nav-icon far fa-newspaper"></i>
                                 <p>
                                     Articles
@@ -160,5 +160,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- App -->
     <script src="/js/app.js"></script>
+
+    @if(Request::segment(1) == 'article')
+    <script src="{{ asset('/js/custom.js') }}"></script>
+    @endif
+    
+    @if(Session::has('message'))
+    <script>
+        var type = '{{ Session::get('alert-type') }}';
+
+        switch (type) {
+            case 'success':
+                toastr.success('{{ Session::get("message") }}');
+                break;
+
+            case 'error':
+                toastr.error('{{ Session::get("message") }}');
+                break;
+        }
+    </script>
+    @endif
 </body>
 </html>
