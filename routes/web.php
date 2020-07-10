@@ -12,9 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
-Auth::routes();
+Auth::routes(['register' => FALSE]);
 
 Route::get('/home', 'HomeController@index')->name('home');
