@@ -95,7 +95,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ url('/users') }}" class="nav-link">
                                 <i class="nav-icon fa fa-users"></i>
                                 <p>
                                     Users
@@ -163,7 +163,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- App -->
     <script src="/js/app.js"></script>
 
-    @if( in_array( Request::segment(1), ['article', 'articles'] ) )
+    @if( in_array( Request::segment(1), ['article', 'articles', 'users'] ) )
     <script src="{{ asset('/js/custom.js') }}"></script>
     @endif
     

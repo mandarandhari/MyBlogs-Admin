@@ -28,4 +28,11 @@ Route::middleware('auth')->group(function() {
     Route::get('/article/edit/{id}', 'ArticleController@edit')->name('article_edit');
     Route::post('/article/edit/{id}', 'ArticleController@update')->name('article_update');
     Route::post('/article/delete/{id}', 'ArticleController@destroy')->name('article_destroy');
+
+    Route::get('/users', 'UserController@index')->name('users_listing');
+    Route::get('/user/add', 'UserController@create')->name('user_create');
+    Route::post('/user/add', 'UserController@store')->name('user_store');
+    Route::get('/user/edit/{id}', 'UserController@edit')->name('user_edit');
+    Route::post('/user/edit/{id}', 'UserController@update')->name('user_update');
+    Route::post('/user/delete/{id}', 'UserController@destroy')->name('user_destroy');
 });
