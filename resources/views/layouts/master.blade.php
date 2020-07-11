@@ -17,6 +17,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- App -->
     <link rel="stylesheet" href="/css/app.css">
+
+    <link rel="stylesheet" href="/css/custom.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>

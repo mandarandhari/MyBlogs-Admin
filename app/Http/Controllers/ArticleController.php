@@ -13,9 +13,15 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('articles.list');
+        if ($request->query('searchterm') != "") {
+            $articles = Article::where('title', 'like', '%' . $request->query('searchterm') . '%')->orderBy('id', 'desc')->paginate(10);
+        } else {
+            $articles = Article::latest()->orderBy('id', 'desc')->paginate(10);
+        }        
+        
+        return view('articles.list')->with('articles', $articles->appends($request->except('page')));
     }
 
     /**
