@@ -55,44 +55,52 @@ class ArticleController extends Controller
 
         $article = new Article;
 
-        $article->user_id = Auth::user()->id;
-        $article->title = $request->title;
-        $article->url = getUrlString($request->title);
-        $article->description = $request->description;
-        $article->is_premium = $request->isPremium;
-        $article->content = $request->content;
-        $article->meta_title = $request->metaTitle;
-        $article->meta_description = $request->metaDescription;
+        if (isset($article->id)) {
+            $article->user_id = Auth::user()->id;
+            $article->title = $request->title;
+            $article->url = getUrlString($request->title);
+            $article->description = $request->description;
+            $article->is_premium = $request->isPremium;
+            $article->content = $request->content;
+            $article->meta_title = $request->metaTitle;
+            $article->meta_description = $request->metaDescription;
 
-        if ($article->save()) {
-            $bannerName = md5( $request->file('banner')->getClientOriginalName() . time() ) . "." . $request->file('banner')->extension();
-            $request->file('banner')->storeAs( 'public/articleBanners/' . $article->id, $bannerName);
+            if ($article->save()) {
+                $bannerName = md5( $request->file('banner')->getClientOriginalName() . time() ) . "." . $request->file('banner')->extension();
+                $request->file('banner')->storeAs( 'public/articleBanners/' . $article->id, $bannerName);
 
-            $thumbName = md5( $request->file('thumb')->getClientOriginalName() . time() ) . "." . $request->file('thumb')->extension();
-            $request->file('thumb')->storeAs( 'public/articleThumbs/'. $article->id, $thumbName);
+                $thumbName = md5( $request->file('thumb')->getClientOriginalName() . time() ) . "." . $request->file('thumb')->extension();
+                $request->file('thumb')->storeAs( 'public/articleThumbs/'. $article->id, $thumbName);
 
-            $article_update = Article::find($article->id);
+                $article_update = Article::find($article->id);
 
-            $article_update->banner = $bannerName;
-            $article_update->thumb = $thumbName;
+                $article_update->banner = $bannerName;
+                $article_update->thumb = $thumbName;
 
-            $article_update->update();
+                $article_update->update();
 
-            $notification = [
-                'message' => 'Article added successfully',
-                'alert-type' => 'success'
-            ];
+                $notification = [
+                    'message' => 'Article added successfully',
+                    'alert-type' => 'success'
+                ];
 
-            return redirect('/articles')->with($notification);
+                return redirect('/articles')->with($notification);
+            } else {
+                $notification = [
+                    'message' => 'An unexpected error occured',
+                    'alert-type' => 'error'
+                ];
+
+                return redirect()->back()->with($notification);
+            }
         } else {
             $notification = [
-                'message' => 'An unexpected error occured',
+                'message' => "Article does not exists",
                 'alert-type' => 'error'
             ];
 
-            return redirect()->back()->with($notification);
+            return redirect('/articles')->with($notification);
         }
-
     }
 
     /**
@@ -114,7 +122,9 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $article = Article::find($id);
+
+        return view('articles.edit')->with('article', $article);
     }
 
     /**
@@ -126,7 +136,77 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['max:1000'],
+            'isPremium' => ['required', 'in:yes,no'],
+            'content' => ['required', 'max:10000'],
+            'metaTitle' => ['required', 'string', 'max:255'],
+            'metaDescription' => ['max:1000'],
+            'banner' => ['sometimes', 'image', 'max:4096'],
+            'thumb' => ['sometimes', 'image', 'max:2048']
+        ]);
+
+        $article = Article::find($id);
+
+        if (isset($article->id)) {        
+            $article_url = ($article->title != $request->title) ? getUrlString($request->title) : $article->url;
+
+            $article->title = $request->title;
+            $article->url = $article_url;
+            $article->description = $request->description;
+            $article->is_premium = $request->isPremium;
+            $article->content = $request->content;
+            $article->meta_title = $request->metaTitle;
+            $article->meta_description = $request->metaDescription;
+
+            if ($request->hasFile('banner')) {
+                if ( file_exists( public_path( 'storage/articleBanners/' . $article->id . '/' . $article->banner ) ) ) {
+                    unlink( public_path( 'storage/articleBanners/' . $article->id . '/'. $article->banner ) );
+                }
+
+                $bannerName = md5( $request->file('banner')->getClientOriginalName() . time() ) . '.' . $request->file('banner')->extension();
+
+                if ( $request->file('banner')->storeAs( 'public/articleBanners/' . $article->id, $bannerName ) ) {
+                    $article->banner = $bannerName;
+                }
+            }
+
+            if ($request->hasFile('thumb')) {
+                if (file_exists( public_path( 'storage/articleThumbs/' . $article->id .'/' . $article->thumb ) )) {
+                    unlink( public_path( 'storage/articleThumbs/' . $article->id . '/' . $article->thumb ) );
+                }
+
+                $thumbName = md5( $request->file('thumb')->getClientOriginalName() . time() ) . '.' . $request->file('thumb')->extension();
+
+                if ( $request->file('thumb')->storeAs( 'public/articleThumbs/' . $article->id, $thumbName ) ) {
+                    $article->thumb = $thumbName;
+                }
+            }
+
+            if ($article->update()) {
+                $notification = [
+                    'message' => "Article updated successfully",
+                    'alert-type' => 'success'
+                ];
+
+                return redirect('/articles')->with($notification);
+            } else {
+                $notification = [
+                    'message' => "An unexpected error occured",
+                    'alert-type' => 'error'
+                ];
+
+                return redirect()->back()->with($notification);
+            }
+        } else {
+            $notification = [
+                'message' => "Article does not exists",
+                'alert-type' => 'error'
+            ];
+
+            return redirect('/articles')->with($notification);
+        }
     }
 
     /**
@@ -137,6 +217,27 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $article = Article::find($id);
+
+        if (isset($article->id)) {
+            if ($article->delete()) {
+                $notification = [
+                    'message' => "Article deleted successfully",
+                    'alert-type' => 'success'
+                ];
+            } else {
+                $notification = [
+                    'message' => "An unexpected error occured",
+                    'alert-type' => 'error'
+                ];
+            }            
+        } else {
+            $notification = [
+                'message' => "Article does not exists",
+                'alert-type' => 'error'
+            ];
+        }
+            
+        return redirect('/articles')->with($notification);
     }
 }

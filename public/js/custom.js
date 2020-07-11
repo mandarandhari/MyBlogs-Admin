@@ -22,4 +22,8 @@ $(document).ready(() => {
 
         reader.readAsDataURL(file);
     });
+
+    $(document).on('click', '.delete-article-btn', function () {
+        $('.delete-article-form').attr('action', $(this).attr('data-url')); 
+    });
 });

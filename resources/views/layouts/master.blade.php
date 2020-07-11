@@ -163,7 +163,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- App -->
     <script src="/js/app.js"></script>
 
-    @if(Request::segment(1) == 'article')
+    @if( in_array( Request::segment(1), ['article', 'articles'] ) )
     <script src="{{ asset('/js/custom.js') }}"></script>
     @endif
     
