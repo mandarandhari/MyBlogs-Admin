@@ -26,4 +26,8 @@ $(document).ready(() => {
     $(document).on('click', '.delete-article-btn', function () {
         $('.delete-article-form').attr('action', $(this).attr('data-url')); 
     });
+
+    $(document).on('click', '.delete-user-btn', function () {
+        $('.delete-user-form').attr('action', $(this).attr('data-url')); 
+    });
 });

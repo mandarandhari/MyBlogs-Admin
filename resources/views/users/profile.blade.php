@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Users</h1>
+                <h1 class="m-0 text-dark">Profile</h1>
             </div>
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -24,15 +24,15 @@
                 <div class="col-md-8">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Add</h3>
+                            <h3 class="card-title">Edit</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('user_store') }}" method="post">
+                            <form action="{{ route('profile_update') }}" method="post">
                                 @csrf
 
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}">
+                                    <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ? old('name') : $user->name }}">
                                     @error('name')
                                     <div class="invalid-feedback" role="alert">
                                         {{ $message }}
@@ -42,27 +42,13 @@
 
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="text" id="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}">
+                                    <input type="text" id="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') ? old('email') : $user->email }}" disabled>
                                     @error('email')
                                     <div class="invalid-feedback" role="alert">
                                         {{ $message }}
                                     </div>
                                     @enderror
-                                </div>                                
-
-                                <div class="form-group">
-                                    <label for="type">Type</label>
-                                    <select class="form-control custom-select @error('type') is-invalid @enderror" name="type">
-                                        <option selected="" disabled="">Select one</option>
-                                        <option value="admin" {{ old('type') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="author" {{ old('type') == 'author' ? 'selected' : '' }}>Author</option>
-                                    </select>
-                                    @error('type')
-                                    <div class="invalid-feedback" role="alert">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>                               
+                                </div>                                 
 
                                 <div class="form-group">
                                     <label for="password">Password</label>

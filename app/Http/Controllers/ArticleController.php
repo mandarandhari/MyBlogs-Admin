@@ -79,7 +79,7 @@ class ArticleController extends Controller
             $article_update->update();
 
             $notification = [
-                'message' => 'Article added successfully',
+                'message' => 'Article added',
                 'alert-type' => 'success'
             ];
 
@@ -177,7 +177,7 @@ class ArticleController extends Controller
 
             if ($article->update()) {
                 $notification = [
-                    'message' => "Article updated successfully",
+                    'message' => "Article updated",
                     'alert-type' => 'success'
                 ];
 
@@ -213,7 +213,7 @@ class ArticleController extends Controller
         if (isset($article->id)) {
             if ($article->delete()) {
                 $notification = [
-                    'message' => "Article deleted successfully",
+                    'message' => "Article deleted",
                     'alert-type' => 'success'
                 ];
             } else {

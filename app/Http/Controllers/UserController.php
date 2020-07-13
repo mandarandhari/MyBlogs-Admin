@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use Auth;
 
 class UserController extends Controller
 {
@@ -59,7 +60,7 @@ class UserController extends Controller
 
         if ($user->save()) {
             $notification = [
-                'message' => "User added successfully",
+                'message' => "User added",
                 'alert-type' => 'success'
             ];
 
@@ -93,7 +94,18 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        if ($id != 1) { //user id 1 is Superadmin
+            $user = User::find($id);
+
+            return view('users.edit')->with('user', $user);
+        } else {
+            $notification = [
+                'message' => "Invalid operation",
+                'alert-type' => 'error'
+            ];
+
+            return redirect('/users')->with($notification);
+        }       
     }
 
     /**
@@ -105,7 +117,60 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validation = [
+            'name' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'in:admin,author']            
+        ];
+
+        if ($request->password != "" || $request->confirmPassword != "") {
+            $validation['password'] = ['required', 'alpha_num', 'min:8'];
+            $validation['confirmPassword'] = ['required', 'same:password'];
+        }
+
+        $request->validate($validation);
+
+        if ($id != 1) {
+            $user = User::find($id);
+
+            if (isset($user->id)) {
+                $user->name = $request->name;
+                $user->type = $request->type;
+                
+                if ($request->password != "") {
+                    $user->password = Hash::make($request->password);
+                }
+
+                if ($user->update()) {
+                    $notification = [
+                        'message' => 'User updated',
+                        'alert-type' => 'success'
+                    ];
+
+                    return redirect('/users')->with($notification);
+                } else {
+                    $notification = [
+                        'message' => 'An unexpected error occured',
+                        'alert-type' => 'error'
+                    ];
+
+                    return redirect()->back()->with($notification);
+                }                
+            } else {
+                $notification = [
+                    'message' => 'User does not exists',
+                    'alert-type' => 'error'
+                ];
+
+                return redirect('/users')->with($notification);
+            }            
+        } else {
+            $notification = [
+                'message' => "Invalid operation",
+                'alert-type' => 'error'
+            ];
+
+            return redirect('/users')->with($notification);
+        }       
     }
 
     /**
@@ -116,6 +181,78 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($id != 1) {
+            $user = User::find($id);
+
+            if (isset($user->id)) {
+                if ($user->delete()) {
+                    $notification = [
+                        'message' => 'User deleted',
+                        'alert-type' => 'success'
+                    ];
+                } else {
+                    $notification = [
+                        'message' => 'An unexpected error occured',
+                        'alert-type' => 'error'
+                    ];
+                }                
+            } else {
+                $notification = [
+                    'message' => 'User does not exists',
+                    'alert-type' => 'error'
+                ];
+            }         
+        } else {
+            $notification = [
+                'message' => "Invalid operation",
+                'alert-type' => 'error'
+            ];
+        }
+
+        return redirect('/users')->with($notification);
+    }
+
+    public function profile() 
+    {
+        $user = User::find(Auth::user()->id);
+
+        return view('users.profile')->with('user', $user);
+    }
+
+    public function update_profile(Request $request)
+    {
+        $validation = [
+            'name' => ['required', 'string', 'max:255']
+        ];
+
+        if ($request->password != "" || $request->confirmPassword != "") {
+            $validation['password'] = ['required', 'alpha_num', 'min:8'];
+            $validation['confirmPassword'] = ['required', 'same:password'];
+        }
+
+        $request->validate($validation);
+        
+        $user = User::find(Auth::user()->id);
+
+        $user->name = $request->name;
+        
+        if ($request->password != "") {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($user->update()) {
+            $notification = [
+                'message' => 'Profile updated',
+                'alert-type' => 'success'
+            ];
+        } else {
+            $notification = [
+                'message' => 'An unexpected error occured',
+                'alert-type' => 'error'
+            ];
+        }
+
+        return redirect()->back()->with($notification);
+        
     }
 }
