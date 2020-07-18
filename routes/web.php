@@ -37,4 +37,11 @@ Route::middleware('auth')->group(function() {
     Route::post('/user/delete/{id}', 'UserController@destroy')->name('user_destroy');
     Route::get('/profile', 'UserController@profile')->name('profile');
     Route::post('/profile', 'UserController@update_profile')->name('profile_update');
+
+    Route::get('/customers', 'CustomerController@index')->name('customers_listing');
+    Route::get('/customer/add', 'CustomerController@create')->name('customer_create');
+    Route::post('/customer/add', 'CustomerController@store')->name('customer_store');
+    Route::get('/customer/edit/{id}', 'CustomerController@edit')->name('customer_edit');
+    Route::post('/customer/edit/{id}', 'CustomerController@update')->name('customer_update');
+    Route::post('/customer/delete/{id}', 'CustomerController@destroy')->name('customer_destroy');
 });
