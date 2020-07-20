@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Customers</h1>
+                <h1 class="m-0 text-dark">Contacts</h1>
             </div>
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -22,9 +22,8 @@
                     <div class="card-header">
                         <h3 class="card-title">List</h3>
 
-                        <div class="card-tools">                        
-                            <a href="{{ url('/customer/add') }}" class="btn btn-sm btn-success" style="float: left;">Add Customer</a>
-                            <form action="{{ route('customers_listing') }}" method="get" class="float-right ml-2">
+                        <div class="card-tools">
+                            <form action="{{ route('contacts_listing') }}" method="get" class="float-right ml-2">
                                 <div class="input-group input-group-sm" style="width: 150px; float: right; margin-top: 0px; margin-left: 10px;">
                                     <input type="text" name="searchterm" class="form-control float-right" placeholder="Search" value="{{ Request::query('searchterm') }}">
 
@@ -55,22 +54,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @if(!empty($customers))
-                            @foreach($customers as $key => $customer)
+                            @if(!empty($contacts))
+                            @foreach($contacts as $key => $contact)
                                 <tr>
                                     <td>{{ ( $key + 1 ) + (( $page - 1 ) * 10) }}</td>
-                                    <td>{{ $customer->name }}</td>
-                                    <td>{{ $customer->email }}</td>
-                                    <td>{{ getExactTime($customer->created_at) }}</td>
+                                    <td>{{ $contact->name }}</td>
+                                    <td>{{ $contact->email }}</td>
+                                    <td>{{ getExactTime($contact->created_at) }}</td>
                                     <td>
-                                        <a href="{{ route('customer_edit', [$customer->id]) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <button type="button" data-url="{{ route('customer_destroy', [$customer->id]) }}" class="btn btn-sm btn-danger delete-customer-btn" data-target="#deleteCustomerModal" data-toggle="modal">Delete</button>
+                                        <button type="button" data-name="{{ $contact->name }}" data-email="{{ $contact->email }}" data-phone="{{ $contact->phone }}" data-message="{{ $contact->message }}" data-toggle="modal" data-target="#viewContactModal" class="btn btn-primary btn-sm mr-2 view-contact-btn" >View</a>
+                                        <button type="button" data-url="{{ route('contact_destroy', [$contact->id]) }}" class="btn btn-sm btn-danger delete-contact-btn" data-target="#deleteContactModal" data-toggle="modal">Delete</button>
                                     </td>
                                 </tr>
                             @endforeach
                             @else
                                 <tr>
-                                    <td colspan="5">No customers found</td>
+                                    <td colspan="5">No contacts found</td>
                                 </tr>
                             @endif
                             </tbody>
@@ -78,7 +77,7 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer listing-page-footer">
-                        {{ $customers->links() }}
+                        {{ $contacts->links() }}
                     </div>
                 </div>
                 <!-- /.card -->
@@ -88,24 +87,67 @@
 </div>
 <!-- /.content -->
 <!-- Modal -->
-<div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteContactModal" tabindex="-1" role="dialog" aria-labelledby="deleteContactModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteCustomerModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="deleteContactModalLabel">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this customer?</p>
+                <p>Are you sure you want to delete this contact?</p>
             </div>
             <div class="modal-footer">
-                <form action="" method="post" class="delete-customer-form">
+                <form action="" method="post" class="delete-contact-form">
                     @csrf
                     <button type="submit" class="btn btn-danger">Yes! Delete it</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="viewContactModal" tabindex="-1" role="dialog" aria-labelledby="viewContactModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewContactModalTitle">Contact Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6><strong>Name:</strong></h6>
+                        <span class="contact-name"></span>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6><strong>Email:</strong></h6>
+                        <span class="contact-email"></span>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6><strong>Phone:</strong></h6>
+                        <span class="contact-phone"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6><strong>Message:</strong></h6>
+                        <span class="contact-message"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

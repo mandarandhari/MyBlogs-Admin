@@ -1,13 +1,12 @@
 @extends('layouts.master')
 
 @section('content')
-<script src="{{ asset('/plugins/ckeditor/ckeditor.js') }}"></script>
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Users</h1>
+                <h1 class="m-0 text-dark">Customers</h1>
             </div>
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -27,12 +26,12 @@
                             <h3 class="card-title">Edit</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('user_update', [$user->id]) }}" method="post">
+                            <form action="{{ route('customer_update', [$customer->id]) }}" method="post">
                                 @csrf
 
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ? old('name') : $user->name }}">
+                                    <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ? old('name') : $customer->name }}">
                                     @error('name')
                                     <div class="invalid-feedback" role="alert">
                                         {{ $message }}
@@ -42,7 +41,7 @@
 
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="text" id="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') ? old('email') : $user->email }}" disabled>
+                                    <input type="text" id="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') ? old('email') : $customer->email }}" disabled>
                                     @error('email')
                                     <div class="invalid-feedback" role="alert">
                                         {{ $message }}
@@ -51,13 +50,9 @@
                                 </div>                                
 
                                 <div class="form-group">
-                                    <label for="type">Type</label>
-                                    <select class="form-control custom-select @error('type') is-invalid @enderror" name="type">
-                                        <option selected="" disabled="">Select one</option>
-                                        <option value="admin" {{ old('type') == 'admin' ? 'selected' : ( $user->type == 'admin' && old('type') != 'author' ? 'selected' : '' ) }}>Admin</option>
-                                        <option value="author" {{ old('type') == 'author' ? 'selected' : ( $user->type == 'author' && old('type') != 'admin' ? 'selected' : '' ) }}>Author</option>
-                                    </select>
-                                    @error('type')
+                                    <label for="type">Phone</label>
+                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') ? old('phone') : $customer->phone }}">
+                                    @error('phone')
                                     <div class="invalid-feedback" role="alert">
                                         {{ $message }}
                                     </div>

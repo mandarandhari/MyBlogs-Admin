@@ -44,4 +44,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/customer/edit/{id}', 'CustomerController@edit')->name('customer_edit');
     Route::post('/customer/edit/{id}', 'CustomerController@update')->name('customer_update');
     Route::post('/customer/delete/{id}', 'CustomerController@destroy')->name('customer_destroy');
+
+    Route::get('/contacts', 'ContactController@index')->name('contacts_listing');
+    Route::post('/contact/delete/{id}', 'ContactController@destroy')->name('contact_destroy');
 });

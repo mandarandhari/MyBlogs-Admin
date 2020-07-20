@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @section('content')
-<script src="{{ asset('/plugins/ckeditor/ckeditor.js') }}"></script>
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
@@ -51,13 +50,9 @@
                                 </div>                                
 
                                 <div class="form-group">
-                                    <label for="type">Type</label>
-                                    <select class="form-control custom-select @error('type') is-invalid @enderror" name="type">
-                                        <option selected="" disabled="">Select one</option>
-                                        <option value="admin" {{ old('type') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="author" {{ old('type') == 'author' ? 'selected' : '' }}>Author</option>
-                                    </select>
-                                    @error('type')
+                                    <label for="phone">Phone</label>
+                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}">
+                                    @error('phone')
                                     <div class="invalid-feedback" role="alert">
                                         {{ $message }}
                                     </div>

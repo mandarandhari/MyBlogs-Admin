@@ -30,4 +30,19 @@ $(document).ready(() => {
     $(document).on('click', '.delete-user-btn', function () {
         $('.delete-user-form').attr('action', $(this).attr('data-url')); 
     });
+
+    $(document).on('click', '.delete-customer-btn', function () {
+        $('.delete-customer-form').attr('action', $(this).attr('data-url')); 
+    });
+
+    $(document).on('click', '.delete-contact-btn', function () {
+        $('.delete-contact-form').attr('action', $(this).attr('data-url')); 
+    });
+
+    $(document).on('click', '.view-contact-btn', function() {
+        $('.contact-name').html($(this).attr('data-name'));
+        $('.contact-email').html($(this).attr('data-email'));
+        $('.contact-phone').html($(this).attr('data-phone'));
+        $('.contact-message').html($(this).attr('data-message'));
+    });
 });

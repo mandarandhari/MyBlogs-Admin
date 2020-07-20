@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Customer;
 
 class CustomerController extends Controller
@@ -30,7 +31,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return view('customers.add');
     }
 
     /**
@@ -41,7 +42,36 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers,email'],
+            'phone' => ['required', 'string', 'max:20'],
+            'password' => ['required', 'alpha_num', 'min:8'],
+            'confirmPassword' => ['required', 'alpha_num', 'same:password']
+        ]);
+
+        $customer = new Customer;
+
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        $customer->phone = $request->phone;
+        $customer->password = Hash::make($request->password);
+
+        if ($customer->save()) {
+            $notification = [
+                'message' => 'Customer added',
+                'alert-type' => 'success'
+            ];
+
+            return redirect('/customers')->with($notification);
+        } else {
+            $notification = [
+                'message' => 'An unexpected error occured',
+                'alert-type' => 'error'
+            ];
+
+            return redirect()->back()->with($notification);
+        }        
     }
 
     /**
@@ -63,7 +93,18 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $customer = Customer::find($id);
+
+        if ( isset( $customer->id ) ) {
+            return view('customers.edit')->with('customer', $customer);
+        } else {
+            $notification = [
+                'message' => 'Customer does not exists',
+                'alert-type' => 'error'
+            ];
+
+            return redirect('/customers')->with($notification);
+        }        
     }
 
     /**
@@ -75,7 +116,51 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validation_array = [
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:255']
+        ];
+
+        if ($request->password != "" || $request->confirmPassword != "") {
+            $validation_array['password'] = ['required', 'alpha_num', 'min:8'];
+            $validation_array['confirmPassword'] = ['required', 'alpha_num', 'same:password'];
+        }
+
+        $request->validate($validation_array);
+
+        $customer = Customer::find($id);
+
+        if ( isset( $customer->id ) ) {
+            $customer->name = $request->name;
+            $customer->phone = $request->phone;
+
+            if ($request->password != "") {
+                $customer->password = Hash::make($request->password);
+            }
+
+            if ( $customer->update() ) {
+                $notification = [
+                    'message' => 'Customer updated',
+                    'alert-type' => 'success'
+                ];
+
+                return redirect('/customers')->with($notification);
+            } else {
+                $notification = [
+                    'message' => 'An unexpected error occured',
+                    'alert-type' => 'error'
+                ];
+
+                return redirect()->back()->with($notification);
+            }            
+        } else {
+            $notification = [
+                'message' => 'Customer does not exists',
+                'alert-type' => 'error'
+            ];
+
+            return redirect('/customers')->with($notification);
+        }        
     }
 
     /**
@@ -86,6 +171,27 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $customer = Customer::find($id);
+
+        if ( isset( $customer->id ) ) {
+            if ( $customer->delete() ) {
+                $notification = [
+                    'message' => 'Customer deleted',
+                    'alert-type' => 'success'
+                ];
+            } else {
+                $notification = [
+                    'message' => 'An unexpected error occured',
+                    'alert-type' => 'error'
+                ];
+            }
+        } else {
+            $notification = [
+                'message' => 'Customer does not exists',
+                'alert-type' => 'error'
+            ];
+        } 
+        
+        return redirect('/customers')->with($notification);
     }
 }
