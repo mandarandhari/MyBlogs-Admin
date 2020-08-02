@@ -65,7 +65,9 @@
                                     <td>{{ $article->title }}</td>
                                     <td>{{ getExactTime($article->created_at) }}</td>
                                     <td>
+                                        @if($article->comments_count > 0)
                                         <a href="{{ route('comments_listing', [$article->id]) }}" class="btn btn-primary btn-sm">Comments</a>
+                                        @endif
                                         <a href="{{ route('article_edit', [$article->id]) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <button type="button" data-url="{{ route('article_destroy', [$article->id]) }}" class="btn btn-sm btn-danger delete-article-btn" data-target="#deleteArticleModal" data-toggle="modal">Delete</button>
                                     </td>

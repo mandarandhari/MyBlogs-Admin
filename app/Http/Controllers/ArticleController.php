@@ -30,7 +30,7 @@ class ArticleController extends Controller
                                 'articles.url',
                                 'articles.thumb',
                                 'articles.created_at',
-                                DB::raw("COUNT('articles_has_comments.id') AS comments_count")
+                                DB::raw('COUNT(articles_has_comments.id) AS comments_count')
                             ])
                             ->groupBy('articles.id')
                             ->paginate(10);
