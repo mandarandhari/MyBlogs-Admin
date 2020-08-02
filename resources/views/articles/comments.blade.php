@@ -5,8 +5,8 @@
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Users</h1>
+            <div class="col-md-12">
+                <h1 class="m-0 text-dark">Comments added on <strong>{{ $article->title }}</strong></h1>
             </div>
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -22,9 +22,8 @@
                     <div class="card-header">
                         <h3 class="card-title">List</h3>
 
-                        <div class="card-tools">                        
-                            <a href="{{ url('/user/add') }}" class="btn btn-sm btn-success" style="float: left;">Add User</a>
-                            <form action="{{ route('users_listing') }}" method="get" class="float-right ml-2">
+                        <div class="card-tools">
+                            <form action="{{ route('comments_listing', [$article->id]) }}" method="get" class="float-right ml-2">
                                 <div class="input-group input-group-sm" style="width: 150px; float: right; margin-top: 0px; margin-left: 10px;">
                                     <input type="text" name="searchterm" class="form-control float-right" placeholder="Search" value="{{ Request::query('searchterm') }}">
 
@@ -48,31 +47,28 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Comment</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Type</th>
-                                    <th>Created on</th>
+                                    <th>Added on</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @if(!empty($users))
-                            @foreach($users as $key => $user)
+                            @if(!empty($comments))
+                            @foreach($comments as $key => $comment)
                                 <tr>
                                     <td>{{ ( $key + 1 ) + (( $page - 1 ) * 10) }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ ucfirst($user->type) }}</td>
-                                    <td>{{ getExactTime($user->created_at) }}</td>
+                                    <td>{{ $comment->comment }}</td>
+                                    <td>{{ $comment->name }}</td>
+                                    <td>{{ getExactTime($comment->created_at) }}</td>
                                     <td>
-                                        <a href="{{ route('user_edit', [$user->id]) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <button type="button" data-url="{{ route('user_destroy', [$user->id]) }}" class="btn btn-sm btn-danger delete-user-btn" data-target="#deleteUserModal" data-toggle="modal">Delete</button>
+                                        <button type="button" data-url="{{ route('comment_destroy', [$comment->id]) }}" class="btn btn-sm btn-danger delete-comment-btn" data-target="#deleteCommentModal" data-toggle="modal">Delete</button>
                                     </td>
                                 </tr>
                             @endforeach
                             @else
                                 <tr>
-                                    <td colspan="5">No articles found</td>
+                                    <td colspan="5">No Comments found</td>
                                 </tr>
                             @endif
                             </tbody>
@@ -80,7 +76,7 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer listing-page-footer">
-                        {{ $users->links() }}
+                    {{ $comments->links() }}
                     </div>
                 </div>
                 <!-- /.card -->
@@ -90,21 +86,22 @@
 </div>
 <!-- /.content -->
 <!-- Modal -->
-<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteUserModalLabel">Delete User</h5>
+                <h5 class="modal-title" id="deleteCommentModalLabel">Delete Comment</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this user?</p>
+                <p>Are you sure you want to delete this comment?</p>
             </div>
             <div class="modal-footer">
-                <form action="" method="post" class="delete-user-form">
+                <form action="" method="post" class="delete-comment-form">
                     @csrf
+                    <input type="hidden" name="article_id" value="{{ $article->id }}">
                     <button type="submit" class="btn btn-danger">Yes! Delete it</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>

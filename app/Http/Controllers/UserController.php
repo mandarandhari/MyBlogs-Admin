@@ -16,11 +16,14 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $users = User::where('id', '>', 1);
+
         if ($request->query('searchterm') != "") {
-            $users = User::where('id', '>', 1)->where('name', 'like', '%' . $request->query('searchterm') . '%')->orWhere('email', 'like', '%' . $request->query('searchterm') . '%')->paginate(10);
-        } else {
-            $users = User::where('id', '>', 1)->paginate(10);
-        }            
+            $users = $users->where('name', 'like', '%' . $request->query('searchterm') . '%')
+                        ->orWhere('email', 'like', '%' . $request->query('searchterm') . '%');
+        }
+
+        $users = $users->paginate(10);
 
         return view('users.list')->with('users', $users->appends($request->except('page')));
     }

@@ -9,11 +9,14 @@ class ContactController extends Controller
 {
     public function index(Request $request)
     {
+        $contacts = Contact::orderBy('id', 'desc');
+        
         if ($request->get('searchterm') && $request->get('searchterm') != "") {
-            $contacts = Contact::where('name', 'like', '%' . $request->get('searchterm') . '%')->orWhere('email', 'like', '%' . $request->get('searchterm') . '%')->orderBy('id', 'desc')->paginate(10);
-        } else {
-            $contacts = Contact::orderBy('id', 'desc')->paginate(10);
-        }
+            $contacts = $contacts->where('name', 'like', '%' . $request->get('searchterm') . '%')
+                                ->orWhere('email', 'like', '%' . $request->get('searchterm') . '%');
+        } 
+            
+        $contacts = $contacts->paginate(10);
         
         return view('contacts.list')->with('contacts', $contacts->appends( $request->except('page') ));
     }

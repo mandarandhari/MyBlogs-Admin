@@ -13,7 +13,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>AdminLTE 3 | Starter</title>
+    <title>MyBlogs | Admin</title>
 
     <!-- App -->
     <link rel="stylesheet" href="/css/app.css">
@@ -71,7 +71,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/articles') }}" class="nav-link @if(Request::segment(1) == 'articles' || Request::segment(1) == 'article') active @endif">
+                            <a href="{{ url('/articles') }}" class="nav-link @if(Request::segment(1) == 'articles' || Request::segment(1) == 'article' || Request::segment(1) == 'comments') active @endif">
                                 <i class="nav-icon far fa-newspaper"></i>
                                 <p>
                                     Articles
@@ -79,7 +79,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/contacts') }}" class="nav-link">
+                            <a href="{{ url('/contacts') }}" class="nav-link @if(Request::segment(1) == 'contacts' || Request::segment(1) == 'contact') active @endif">
                                 <i class="nav-icon  fas fa-id-card"></i>
                                 <p>
                                     Contacts
@@ -87,7 +87,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/customers') }}" class="nav-link">
+                            <a href="{{ url('/customers') }}" class="nav-link @if(Request::segment(1) == 'customers' || Request::segment(1) == 'customer') active @endif">
                                 <i class="nav-icon fas fa-book-reader"></i>
                                 <p>
                                     Customers
@@ -95,7 +95,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/users') }}" class="nav-link">
+                            <a href="{{ url('/users') }}" class="nav-link @if(Request::segment(1) == 'users' || Request::segment(1) == 'user') active @endif">
                                 <i class="nav-icon fa fa-users"></i>
                                 <p>
                                     Users
@@ -103,7 +103,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/profile') }}" class="nav-link">
+                            <a href="{{ url('/profile') }}" class="nav-link @if(Request::segment(1) == 'profile') active @endif">
                                 <i class="nav-icon fa fa-user"></i>
                                 <p>
                                     Profile
@@ -163,7 +163,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- App -->
     <script src="/js/app.js"></script>
 
-    @if( in_array( Request::segment(1), ['article', 'articles', 'users', 'contacts', 'customers'] ) )
+    @if( in_array( Request::segment(1), ['article', 'articles', 'users', 'contacts', 'customers', 'comments'] ) )
     <script src="{{ asset('/js/custom.js') }}"></script>
     @endif
     

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Article;
+use App\Comment;
 use Auth;
+use DB;
 
 class ArticleController extends Controller
 {
@@ -15,12 +17,24 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
+        $articles = Article::leftJoin('articles_has_comments', 'articles.id', '=', 'articles_has_comments.article_id');
+
         if ($request->query('searchterm') != "") {
-            $articles = Article::where('title', 'like', '%' . $request->query('searchterm') . '%')->orderBy('id', 'desc')->paginate(10);
-        } else {
-            $articles = Article::latest()->orderBy('id', 'desc')->paginate(10);
-        }        
-        
+            $articles = $articles->where('title', 'like', '%' . $request->query('searchterm') . '%');
+        }
+
+        $articles = $articles->orderBy('articles.id', 'desc')
+                            ->select([
+                                'articles.id',
+                                'articles.title',
+                                'articles.url',
+                                'articles.thumb',
+                                'articles.created_at',
+                                DB::raw("COUNT('articles_has_comments.id') AS comments_count")
+                            ])
+                            ->groupBy('articles.id')
+                            ->paginate(10);
+
         return view('articles.list')->with('articles', $articles->appends($request->except('page')));
     }
 
@@ -230,5 +244,62 @@ class ArticleController extends Controller
         }
             
         return redirect('/articles')->with($notification);
+    }
+
+    public function get_all_comments(Request $request, $article_id)
+    {
+        $searchterm = $request->query('searchterm');
+
+        $comments = Comment::leftJoin('customers', 'articles_has_comments.customer_id', '=', 'customers.id');
+
+        if ($searchterm != "") {
+            $comments = $comments->where(function($query) use ($searchterm, $article_id) {
+                                $query->where('articles_has_comments.comment', 'like', '%'. $searchterm . '%');
+                            })
+                            ->orWhere(function($query) use ($searchterm, $article_id) {
+                                $query->where('customers.name', 'like', '%' . $searchterm . '%');
+                            });
+        }
+
+        $comments = $comments->where('articles_has_comments.article_id', $article_id)
+                            ->select([
+                                'articles_has_comments.id',
+                                'articles_has_comments.article_id',
+                                'articles_has_comments.customer_id',
+                                'articles_has_comments.comment',
+                                'articles_has_comments.created_at',
+                                'customers.name'
+                            ])
+                            ->paginate(10);
+
+        $article = Article::find($article_id);
+
+        return view('articles.comments')->with(['comments' => $comments->appends($request->except('page')), 'article' => $article]);
+    }
+
+    public function delete_comment(Request $request, $id)
+    {
+        $comment = Comment::find($id);
+
+        if (isset($comment->id)) {
+            if ($comment->delete()) {
+                $notification = [
+                    'message' => 'Comment deleted',
+                    'alert-type' => 'success'
+                ];
+            } else {
+                $notification = [
+                    'message' => 'An unexpected error occured',
+                    'alert-type' => 'error'
+                ];
+            }
+        } else {
+            $notification = [
+                'message' => 'Comment does not exists',
+                'alert-type' => 'error'
+            ];
+        }
+        
+        return redirect('/comments/' . $request->article_id)->with($notification);
     }
 }

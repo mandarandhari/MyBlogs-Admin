@@ -15,11 +15,14 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+        $customers = Customer::orderBy('id', 'desc');
+
         if ($request->get('searchterm') && $request->get('searchterm') != "") {
-            $customers = Customer::where( 'name', 'like', '%' . $request->get('searchterm') . '%' )->orWhere( 'email', 'like', '%' . $request->get('searchterm') . '%' )->orderBy('id', 'desc')->paginate(10);
-        } else {
-            $customers = Customer::orderBy('id', 'desc')->paginate(10);
-        }       
+            $customers = $customers->where( 'name', 'like', '%' . $request->get('searchterm') . '%' )
+                                ->orWhere( 'email', 'like', '%' . $request->get('searchterm') . '%' );
+        }
+            
+        $customers = $customers->paginate(10);
 
         return view('customers.list')->with('customers', $customers->appends( $request->except('page') ));
     }

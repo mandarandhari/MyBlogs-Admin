@@ -65,6 +65,7 @@
                                     <td>{{ $article->title }}</td>
                                     <td>{{ getExactTime($article->created_at) }}</td>
                                     <td>
+                                        <a href="{{ route('comments_listing', [$article->id]) }}" class="btn btn-primary btn-sm">Comments</a>
                                         <a href="{{ route('article_edit', [$article->id]) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <button type="button" data-url="{{ route('article_destroy', [$article->id]) }}" class="btn btn-sm btn-danger delete-article-btn" data-target="#deleteArticleModal" data-toggle="modal">Delete</button>
                                     </td>
@@ -94,7 +95,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteArticleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="deleteArticleModalLabel">Delete Article</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

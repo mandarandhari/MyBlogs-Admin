@@ -47,4 +47,7 @@ Route::middleware('auth')->group(function() {
 
     Route::get('/contacts', 'ContactController@index')->name('contacts_listing');
     Route::post('/contact/delete/{id}', 'ContactController@destroy')->name('contact_destroy');
+
+    Route::get('/comments/{id}', 'ArticleController@get_all_comments')->name('comments_listing');
+    Route::post('/comment/delete/{id}', 'ArticleController@delete_comment')->name('comment_destroy');
 });

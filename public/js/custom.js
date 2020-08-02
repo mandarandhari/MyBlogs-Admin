@@ -39,6 +39,10 @@ $(document).ready(() => {
         $('.delete-contact-form').attr('action', $(this).attr('data-url')); 
     });
 
+    $(document).on('click', '.delete-comment-btn', function () {
+        $('.delete-comment-form').attr('action', $(this).attr('data-url')); 
+    });
+
     $(document).on('click', '.view-contact-btn', function() {
         $('.contact-name').html($(this).attr('data-name'));
         $('.contact-email').html($(this).attr('data-email'));
