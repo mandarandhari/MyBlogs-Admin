@@ -60,7 +60,7 @@
                                 <tr>
                                     <td>{{ ( $key + 1 ) + (( $page - 1 ) * 10) }}</td>
                                     <td>
-                                        <img src="{{ $article->thumb_url }}" alt="" style="width: 150px;">
+                                        <img src="{{ $article->thumb_url != '' ? $article->thumb_url : '' }}" alt="" style="width: 150px;">
                                     </td>
                                     <td>{{ $article->title }}</td>
                                     <td>{{ getExactTime($article->created_at) }}</td>

@@ -108,7 +108,7 @@
                                             </div>
                                             @enderror
                                             <div id="bannerBase64" class="position-relative mt-2" style="width: 70%;">
-                                                <img src="{{ $article->banner_url }}" style="width: 100%;" />
+                                                <img src="{{ $article->banner_url != '' ? $article->banner_url : '' }}" style="width: 100%;" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -120,7 +120,7 @@
                                             </div>
                                             @enderror
                                             <div id="thumbBase64" class="position-relative mt-2" style="width: 50%;">
-                                                <img src="{{ $article->thumb_url }}" style="width: 100%;" />
+                                                <img src="{{ $article->thumb_url != '' ? $article->thumb_url : '' }}" style="width: 100%;" />
                                             </div>
                                         </div>
                                     </div>
