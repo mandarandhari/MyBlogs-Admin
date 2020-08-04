@@ -49,4 +49,10 @@ $(document).ready(() => {
         $('.contact-phone').html($(this).attr('data-phone'));
         $('.contact-message').html($(this).attr('data-message'));
     });
+
+    $(document).on('click', '.submit-btn', function() {
+        $(this).html('<i class="fa fa-spinner fa-spin"></i> Please Wait');
+        $(this).attr('disabled', 'disabled');
+        $(this).parents('form:first').submit();
+    });
 });

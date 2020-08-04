@@ -105,7 +105,7 @@
             <div class="modal-footer">
                 <form action="" method="post" class="delete-user-form">
                     @csrf
-                    <button type="submit" class="btn btn-danger">Yes! Delete it</button>
+                    <button type="submit" class="btn btn-danger submit-btn">Yes! Delete it</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
             </div>

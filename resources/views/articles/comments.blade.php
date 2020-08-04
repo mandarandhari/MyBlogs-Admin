@@ -102,7 +102,7 @@
                 <form action="" method="post" class="delete-comment-form">
                     @csrf
                     <input type="hidden" name="article_id" value="{{ $article->id }}">
-                    <button type="submit" class="btn btn-danger">Yes! Delete it</button>
+                    <button type="submit" class="btn btn-danger submit-btn">Yes! Delete it</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
             </div>

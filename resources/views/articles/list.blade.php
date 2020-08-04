@@ -60,7 +60,7 @@
                                 <tr>
                                     <td>{{ ( $key + 1 ) + (( $page - 1 ) * 10) }}</td>
                                     <td>
-                                        <img src="{{ asset('storage/articleThumbs/' . $article->id . '/' . $article->thumb) }}" alt="" style="width: 150px;">
+                                        <img src="{{ $article->thumb_url }}" alt="" style="width: 150px;">
                                     </td>
                                     <td>{{ $article->title }}</td>
                                     <td>{{ getExactTime($article->created_at) }}</td>
@@ -108,7 +108,7 @@
             <div class="modal-footer">
                 <form action="" method="post" class="delete-article-form">
                     @csrf
-                    <button type="submit" class="btn btn-danger">Yes! Delete it</button>
+                    <button type="submit" class="btn btn-danger submit-btn">Yes! Delete it</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
             </div>
