@@ -22,7 +22,7 @@ class CreateArticlesTable extends Migration
             $table->enum('is_premium', ['yes', 'no']);
             $table->longText('content');
             $table->string('meta_title');
-            $table->string('meta_description')->nullable();
+            $table->text('meta_description')->nullable();
             $table->string('banner')->nullable();
             $table->string('banner_url')->nullable();
             $table->string('thumb')->nullable();
